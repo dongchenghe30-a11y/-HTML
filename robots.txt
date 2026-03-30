@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://html.okxxu.com/sitemap.xml
