@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CodeToolKit - Free Online HTML Preview & Markdown Editor</title>
+<meta name="description" content="Free online HTML live preview and Markdown editor tool. No registration required. Write, preview, and export HTML & Markdown instantly.">
+<meta name="keywords" content="HTML preview, Markdown editor, online code editor, live HTML preview, Markdown to HTML, free web tools">
+<link rel="canonical" href="https://codetoolkit.com/">
+<meta property="og:title" content="CodeToolKit - Free Online HTML Preview & Markdown Editor">
+<meta property="og:description" content="Free online tools for HTML live preview and Markdown editing. No signup required.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://codetoolkit.com/">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%25' stop-color='%236366f1'/><stop offset='100%25' stop-color='%238b5cf6'/></linearGradient></defs><rect width='64' height='64' rx='14' fill='url(%23g)'/><text x='32' y='42' text-anchor='middle' font-family='Arial,sans-serif' font-weight='bold' font-size='30' fill='white'>CT</text></svg>">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown-light.min.css">
+<script src="https://cdn.jsdelivr.net/npm/marked@12/marked.min.js"></script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#6366f1;--primary-hover:#4f46e5;--bg:#ffffff;--bg-secondary:#f8fafc;--bg-card:#ffffff;--text:#1e293b;--text-secondary:#64748b;--border:#e2e8f0;--radius:8px;--shadow:0 1px 3px rgba(0,0,0,.08);--font:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);color:var(--text);background:var(--bg);line-height:1.6}
+a{color:var(--primary);text-decoration:none}
+
+/* Header */
+.header{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:18px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px}
+.logo-icon{width:32px;height:32px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:8px;color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700}
+.nav{display:flex;align-items:center;gap:6px}
+.nav a,.nav button{padding:6px 14px;border-radius:6px;font-size:14px;color:var(--text-secondary);transition:all .2s;cursor:pointer;background:none;border:none;font-family:var(--font)}
+.nav a:hover,.nav button:hover{color:var(--text);background:var(--bg-secondary)}
+.nav .active{color:var(--primary);background:#eef2ff;font-weight:500}
+.lang-btn{font-size:13px!important;padding:4px 10px!important;border:1px solid var(--border)!important;border-radius:20px!important}
+
+/* Sections */
+.section{padding:60px 24px;max-width:1200px;margin:0 auto}
+.section-title{font-size:28px;font-weight:700;margin-bottom:8px}
+.section-desc{color:var(--text-secondary);margin-bottom:32px;font-size:15px}
+
+/* Hero */
+.hero{text-align:center;padding:80px 24px 60px;max-width:720px;margin:0 auto}
+.hero h1{font-size:36px;font-weight:800;margin-bottom:12px;letter-spacing:-.5px}
+.hero p{color:var(--text-secondary);font-size:16px;margin-bottom:32px}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 24px;border-radius:8px;font-size:15px;font-weight:500;cursor:pointer;border:none;transition:all .2s;font-family:var(--font)}
+.btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:var(--primary-hover)}
+.btn-outline{background:#fff;color:var(--text);border:1px solid var(--border)}.btn-outline:hover{border-color:var(--primary);color:var(--primary)}
+
+/* Tool Container */
+.tool-area{display:none;flex-direction:column;gap:12px}
+.tool-area.active{display:flex}
+.tool-bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.tool-bar-actions{display:flex;gap:6px}
+.tool-bar-actions button{padding:5px 14px;border-radius:6px;font-size:13px;cursor:pointer;border:1px solid var(--border);background:#fff;color:var(--text-secondary);transition:all .2s;font-family:var(--font)}
+.tool-bar-actions button:hover{border-color:var(--primary);color:var(--primary)}
+.editor-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px;min-height:500px}
+.editor-pane{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column}
+.editor-pane-header{padding:8px 12px;font-size:12px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.5px;background:var(--bg-secondary);border-bottom:1px solid var(--border)}
+.editor-pane textarea{flex:1;border:none;outline:none;resize:none;padding:16px;font-family:'SF Mono',Monaco,Consolas,'Liberation Mono',monospace;font-size:14px;line-height:1.6;color:var(--text);background:#fff;tab-size:2}
+.preview-pane iframe{flex:1;border:none;width:100%;min-height:470px;background:#fff}
+.markdown-preview{flex:1;padding:20px;overflow:auto;background:#fff}
+.markdown-preview h1,.markdown-preview h2,.markdown-preview h3{margin:16px 0 8px}
+.markdown-preview p{margin:8px 0}
+.markdown-preview pre{background:#f1f5f9;padding:12px;border-radius:6px;overflow-x:auto}
+.markdown-preview code{background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:13px}
+.markdown-preview pre code{background:none;padding:0}
+.markdown-preview ul,.markdown-preview ol{padding-left:24px;margin:8px 0}
+.markdown-preview blockquote{border-left:3px solid var(--primary);padding:4px 16px;color:var(--text-secondary);margin:8px 0}
+
+/* Features */
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.feature-card{padding:24px;border:1px solid var(--border);border-radius:var(--radius);transition:all .2s}
+.feature-card:hover{border-color:var(--primary);box-shadow:0 4px 12px rgba(99,102,241,.1)}
+.feature-card h3{font-size:16px;font-weight:600;margin-bottom:6px}
+.feature-card p{font-size:14px;color:var(--text-secondary)}
+
+/* Blog */
+.blog-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.blog-card{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:all .2s;cursor:pointer}
+.blog-card:hover{box-shadow:var(--shadow);transform:translateY(-1px)}
+.blog-card-body{padding:20px}
+.blog-card-body h3{font-size:16px;font-weight:600;margin-bottom:8px}
+.blog-card-body p{font-size:14px;color:var(--text-secondary);line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.blog-card-meta{font-size:12px;color:var(--text-secondary);margin-top:12px}
+
+/* About */
+.about-content{max-width:680px}
+.about-content p{color:var(--text-secondary);margin-bottom:16px;font-size:15px}
+
+/* SEO Content */
+.seo-section{border-top:1px solid var(--border);padding:60px 24px;max-width:1200px;margin:0 auto}
+.seo-section:last-of-type{border-bottom:1px solid var(--border)}
+.seo-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px}
+.seo-grid h2{font-size:22px;font-weight:700;margin-bottom:16px}
+.seo-grid h3{font-size:16px;font-weight:600;margin:20px 0 8px}
+.seo-grid p{color:var(--text-secondary);font-size:14px;line-height:1.7;margin-bottom:12px}
+.seo-grid ul,.seo-grid ol{color:var(--text-secondary);font-size:14px;line-height:1.7;padding-left:20px;margin-bottom:12px}
+.seo-grid ul li,.seo-grid ol li{margin-bottom:4px}
+.seo-grid code{background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:13px}
+.seo-grid pre{background:#f1f5f9;padding:14px;border-radius:8px;overflow-x:auto;margin-bottom:12px}
+.seo-grid pre code{background:none;padding:0;font-size:13px}
+.seo-tag{display:inline-block;padding:3px 10px;background:#eef2ff;color:var(--primary);border-radius:20px;font-size:12px;font-weight:500;margin-bottom:12px}
+.seo-divider{grid-column:1/-1;border-top:1px solid var(--border);margin:8px 0}
+@media(max-width:768px){.seo-grid{grid-template-columns:1fr;gap:32px}}
+
+/* Footer */
+.footer{border-top:1px solid var(--border);padding:24px;text-align:center;color:var(--text-secondary);font-size:13px;margin-top:40px}
+.footer-links{display:flex;gap:16px;justify-content:center;margin-bottom:12px;flex-wrap:wrap}
+.footer-links a{color:var(--text-secondary);font-size:13px}
+.footer-links a:hover{color:var(--primary)}
+
+/* Page */
+.page{display:none}
+.page.active{display:block}
+
+/* Blog article */
+.article-page{display:none;padding:60px 24px;max-width:760px;margin:0 auto}
+.article-page.active{display:block}
+.article-page h1{font-size:28px;font-weight:700;margin-bottom:8px}
+.article-meta{color:var(--text-secondary);font-size:14px;margin-bottom:24px}
+.article-body{color:var(--text);font-size:15px;line-height:1.8}
+.article-body h2{font-size:22px;font-weight:700;margin:32px 0 12px}
+.article-body h3{font-size:18px;font-weight:600;margin:24px 0 8px}
+.article-body p{margin-bottom:16px}
+.article-body ul,.article-body ol{padding-left:24px;margin-bottom:16px}
+.article-body ul li,.article-body ol li{margin-bottom:6px}
+.article-body pre{background:#f1f5f9;padding:16px;border-radius:8px;overflow-x:auto;margin-bottom:16px}
+.article-body code{background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:13px}
+.article-body pre code{background:none;padding:0}
+.article-body blockquote{border-left:3px solid var(--primary);padding:8px 20px;color:var(--text-secondary);margin:16px 0}
+.article-back{display:inline-flex;align-items:center;gap:6px;color:var(--primary);font-size:14px;margin-bottom:24px;cursor:pointer}
+
+/* Responsive */
+@media(max-width:768px){
+  .editor-wrap{grid-template-columns:1fr;min-height:auto}
+  .preview-pane iframe{min-height:300px}
+  .hero h1{font-size:26px}
+  .section{padding:40px 16px}
+  .features-grid{grid-template-columns:1fr}
+  .blog-grid{grid-template-columns:1fr}
+  .nav a,.nav button{padding:6px 8px;font-size:13px}
+  .header{padding:0 12px}
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+  <div class="logo">
+    <div class="logo-icon">CT</div>
+    <span>CodeToolKit</span>
+  </div>
+  <nav class="nav">
+    <a href="#" onclick="showPage('home');return false" class="active" data-i18n="nav_home">Home</a>
+    <a href="#" onclick="showPage('html-tool');return false" data-i18n="nav_html">HTML Preview</a>
+    <a href="#" onclick="showPage('md-tool');return false" data-i18n="nav_md">Markdown</a>
+    <a href="#" onclick="showPage('blog');return false" data-i18n="nav_blog">Blog</a>
+    <a href="#" onclick="showPage('about');return false" data-i18n="nav_about">About</a>
+    <button class="lang-btn" onclick="toggleLang()">中文</button>
+  </nav>
+</header>
+
+<!-- Home Page -->
+<div id="page-home" class="page active">
+  <div class="hero">
+    <h1 data-i18n="hero_title">Free Online HTML Preview & Markdown Editor</h1>
+    <p data-i18n="hero_desc">No registration, no installation. Write HTML and Markdown directly in your browser with instant live preview.</p>
+    <div class="hero-btns">
+      <button class="btn btn-primary" onclick="showPage('html-tool')" data-i18n="hero_btn_html">▶ HTML Preview</button>
+      <button class="btn btn-outline" onclick="showPage('md-tool')" data-i18n="hero_btn_md">✎ Markdown Editor</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title" data-i18n="feat_title">Why CodeToolKit?</h2>
+    <p class="section-desc" data-i18n="feat_desc">Simple, fast, and free web developer tools for everyone.</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <h3 data-i18n="feat1_title">⚡ Instant Preview</h3>
+        <p data-i18n="feat1_desc">See your HTML or Markdown render in real-time as you type. No need to save and refresh.</p>
+      </div>
+      <div class="feature-card">
+        <h3 data-i18n="feat2_title">🔒 Privacy First</h3>
+        <p data-i18n="feat2_desc">All processing happens in your browser. Your code never leaves your device.</p>
+      </div>
+      <div class="feature-card">
+        <h3 data-i18n="feat3_title">🆓 100% Free</h3>
+        <p data-i18n="feat3_desc">No registration, no limits, no hidden fees. Use it as much as you want.</p>
+      </div>
+      <div class="feature-card">
+        <h3 data-i18n="feat4_title">📱 Mobile Friendly</h3>
+        <p data-i18n="feat4_desc">Works perfectly on desktop, tablet, and mobile devices.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEO Content: rendered dynamically -->
+  <div id="seo-content"></div>
+</div>
+
+<!-- HTML Preview Tool Page -->
+<div id="page-html-tool" class="page">
+  <div class="section">
+    <h1 class="section-title" data-i18n="html_title">Online HTML Live Preview</h1>
+    <p class="section-desc" data-i18n="html_desc">Write HTML code on the left and see the rendered result on the right instantly.</p>
+    <div class="tool-area active">
+      <div class="tool-bar">
+        <span style="font-size:13px;color:var(--text-secondary)" data-i18n="html_hint">Type HTML in the editor below...</span>
+        <div class="tool-bar-actions">
+          <button onclick="clearHtmlEditor()" data-i18n="btn_clear">Clear</button>
+          <button onclick="copyHtmlCode()" data-i18n="btn_copy">Copy Code</button>
+          <button onclick="downloadHtml()" data-i18n="btn_download">Download</button>
+        </div>
+      </div>
+      <div class="editor-wrap">
+        <div class="editor-pane">
+          <div class="editor-pane-header" data-i18n="label_html_editor">HTML Editor</div>
+          <textarea id="html-editor" spellcheck="false" placeholder="<!DOCTYPE html>&#10;<html>&#10;<body>&#10;  <h1>Hello World</h1>&#10;</body>&#10;</html>"><!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); margin: 0; }
+    .card { background: white; padding: 40px; border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,.2); text-align: center; }
+    h1 { color: #333; margin-bottom: 8px; }
+    p { color: #666; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Hello World! 👋</h1>
+    <p>Start editing to see changes in real-time.</p>
+  </div>
+</body>
+</html></textarea>
+        </div>
+        <div class="editor-pane">
+          <div class="editor-pane-header" data-i18n="label_preview">Preview</div>
+          <iframe id="html-preview"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Markdown Editor Tool Page -->
+<div id="page-md-tool" class="page">
+  <div class="section">
+    <h1 class="section-title" data-i18n="md_title">Online Markdown Editor</h1>
+    <p class="section-desc" data-i18n="md_desc">Write Markdown on the left and see the formatted output on the right.</p>
+    <div class="tool-area active">
+      <div class="tool-bar">
+        <span style="font-size:13px;color:var(--text-secondary)" data-i18n="md_hint">Supports standard Markdown syntax...</span>
+        <div class="tool-bar-actions">
+          <button onclick="clearMdEditor()" data-i18n="btn_clear">Clear</button>
+          <button onclick="copyMdHtml()" data-i18n="btn_copy_html">Copy HTML</button>
+          <button onclick="downloadMd()" data-i18n="btn_download_md">Download .md</button>
+        </div>
+      </div>
+      <div class="editor-wrap">
+        <div class="editor-pane">
+          <div class="editor-pane-header" data-i18n="label_md_editor">Markdown Editor</div>
+          <textarea id="md-editor" spellcheck="false" placeholder="# Title&#10;&#10;Write your markdown here..."># Welcome to CodeToolKit Markdown Editor ✨
+
+## Features
+
+- **Bold** and *italic* text
+- Lists and checklists
+- Code blocks with syntax highlighting
+- [Links](https://example.com) and images
+
+## Code Example
+
+```javascript
+function hello() {
+  console.log("Hello, World!");
+}
+```
+
+> Blockquotes are supported too!
+
+---
+
+Start typing to see the live preview →</textarea>
+        </div>
+        <div class="editor-pane">
+          <div class="editor-pane-header" data-i18n="label_preview">Preview</div>
+          <div id="md-preview" class="markdown-preview markdown-body"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Blog Page -->
+<div id="page-blog" class="page">
+  <div class="section">
+    <h1 class="section-title" data-i18n="blog_title">Blog & Tutorials</h1>
+    <p class="section-desc" data-i18n="blog_desc">Learn HTML, Markdown, and web development tips.</p>
+    <div class="blog-grid" id="blog-grid"></div>
+  </div>
+</div>
+
+<!-- Blog Article Pages -->
+<div id="page-article" class="article-page">
+  <a class="article-back" onclick="showPage('blog')">← <span data-i18n="blog_back">Back to Blog</span></a>
+  <h1 id="article-title"></h1>
+  <div class="article-meta" id="article-meta"></div>
+  <div class="article-body" id="article-body"></div>
+</div>
+
+<!-- About Page -->
+<div id="page-about" class="page">
+  <div class="section">
+    <h1 class="section-title" data-i18n="about_title">About CodeToolKit</h1>
+    <div class="about-content" id="about-content"></div>
+  </div>
+</div>
+
+<!-- Privacy Policy -->
+<div id="page-privacy" class="page">
+  <div class="section">
+    <h1 class="section-title" data-i18n="privacy_title">Privacy Policy</h1>
+    <div class="about-content" id="privacy-content"></div>
+  </div>
+</div>
+
+<!-- Terms of Service -->
+<div id="page-terms" class="page">
+  <div class="section">
+    <h1 class="section-title" data-i18n="terms_title">Terms of Service</h1>
+    <div class="about-content" id="terms-content"></div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-links">
+    <a href="#" onclick="showPage('privacy');return false" data-i18n="footer_privacy">Privacy Policy</a>
+    <a href="#" onclick="showPage('terms');return false" data-i18n="footer_terms">Terms of Service</a>
+    <a href="#" onclick="showPage('about');return false" data-i18n="nav_about">About</a>
+  </div>
+  <p>© 2026 CodeToolKit. <span data-i18n="footer_rights">All rights reserved.</span></p>
+</footer>
+
+<!-- AdSense placeholder (replace with real code) -->
+<!--
+<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="XXXXXXXXXX" data-ad-format="auto"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+-->
+
+<script>
+// ==================== I18N ====================
+let currentLang = 'en';
+const i18n = {
+  en: {
+    nav_home: 'Home', nav_html: 'HTML Preview', nav_md: 'Markdown', nav_blog: 'Blog', nav_about: 'About',
+    hero_title: 'Free Online HTML Preview & Markdown Editor',
+    hero_desc: 'No registration, no installation. Write HTML and Markdown directly in your browser with instant live preview.',
+    hero_btn_html: '▶ HTML Preview', hero_btn_md: '✎ Markdown Editor',
+    feat_title: 'Why CodeToolKit?', feat_desc: 'Simple, fast, and free web developer tools for everyone.',
+    feat1_title: '⚡ Instant Preview', feat1_desc: 'See your HTML or Markdown render in real-time as you type. No need to save and refresh.',
+    feat2_title: '🔒 Privacy First', feat2_desc: 'All processing happens in your browser. Your code never leaves your device.',
+    feat3_title: '🆓 100% Free', feat3_desc: 'No registration, no limits, no hidden fees. Use it as much as you want.',
+    feat4_title: '📱 Mobile Friendly', feat4_desc: 'Works perfectly on desktop, tablet, and mobile devices.',
+    html_title: 'Online HTML Live Preview', html_desc: 'Write HTML code on the left and see the rendered result on the right instantly.',
+    html_hint: 'Type HTML in the editor below...', label_html_editor: 'HTML Editor', label_preview: 'Preview',
+    md_title: 'Online Markdown Editor', md_desc: 'Write Markdown on the left and see the formatted output on the right.',
+    md_hint: 'Supports standard Markdown syntax...', label_md_editor: 'Markdown Editor',
+    btn_clear: 'Clear', btn_copy: 'Copy Code', btn_download: 'Download', btn_copy_html: 'Copy HTML', btn_download_md: 'Download .md',
+    blog_title: 'Blog & Tutorials', blog_desc: 'Learn HTML, Markdown, and web development tips.', blog_back: 'Back to Blog',
+    about_title: 'About CodeToolKit',
+    footer_rights: 'All rights reserved.',
+    footer_privacy: 'Privacy Policy',
+    footer_terms: 'Terms of Service',
+    privacy_title: 'Privacy Policy',
+    terms_title: 'Terms of Service',
+    copied: 'Copied!', downloaded: 'Downloaded!',
+    about_text: `<p>CodeToolKit is a free online toolkit designed for web developers, content creators, and anyone who works with HTML and Markdown. Our mission is to provide simple, fast, and privacy-focused tools that help you write and preview code without any hassle.</p>
+    <h2>Our Story</h2>
+    <p>We built CodeToolKit because we were tired of bloated online editors that require sign-ups, bombard you with ads, or send your code to remote servers. We wanted something simple — a tool that just works, right in your browser.</p>
+    <h2>Our Principles</h2>
+    <ul><li><strong>Privacy First:</strong> All code processing happens locally in your browser. We never send your code to any server.</li>
+    <li><strong>Free Forever:</strong> CodeToolKit is and will always be completely free to use, with no registration required.</li>
+    <li><strong>Simple & Fast:</strong> No bloat, no unnecessary features. Just the tools you need, working fast.</li>
+    <li><strong>Open Standards:</strong> We support standard HTML5 and CommonMark Markdown specifications.</li></ul>
+    <h2>Contact</h2>
+    <p>Have questions or suggestions? We'd love to hear from you. Reach out at <strong>contact@codetoolkit.com</strong>.</p>`,
+    privacy_text: `<p><strong>Effective Date:</strong> March 30, 2026</p>
+    <h2>Introduction</h2>
+    <p>CodeToolKit ("we", "us", "our") operates the website codetoolkit.com. This page informs you of our policies regarding the collection, use, and disclosure of personal data when you use our Service.</p>
+    <h2>Information We Collect</h2>
+    <p><strong>We do not collect personal information.</strong> CodeToolKit operates entirely in your browser. Your HTML code, Markdown content, and any other data you input are processed locally and are never transmitted to our servers.</p>
+    <h2>Cookies & Analytics</h2>
+    <p>We may use third-party analytics services (such as Google Analytics) to collect anonymous usage data, including page views, browser type, and device type. This data helps us improve our service and cannot be used to identify individual users.</p>
+    <p>We may also use cookies for advertising purposes through Google AdSense. These cookies are managed by Google and are subject to <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's Privacy Policy</a>.</p>
+    <h2>Third-Party Services</h2>
+    <p>We may display advertisements provided by Google AdSense. Google and its partners may use cookies to serve ads based on your prior visits to this and other websites. You can opt out of personalized advertising by visiting <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener">Google Ads Settings</a>.</p>
+    <h2>Children's Privacy</h2>
+    <p>Our Service does not address anyone under the age of 13. We do not knowingly collect personal information from children under 13.</p>
+    <h2>Changes to This Policy</h2>
+    <p>We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Effective Date" at the top.</p>
+    <h2>Contact Us</h2>
+    <p>If you have any questions about this Privacy Policy, please contact us at <strong>contact@codetoolkit.com</strong>.</p>`,
+    terms_text: `<p><strong>Effective Date:</strong> March 30, 2026</p>
+    <h2>Agreement to Terms</h2>
+    <p>By accessing and using CodeToolKit (codetoolkit.com), you agree to be bound by these Terms of Service. If you do not agree with any part of these terms, you may not use our Service.</p>
+    <h2>Description of Service</h2>
+    <p>CodeToolKit provides free online tools for HTML live preview and Markdown editing. The Service is provided "as is" without warranties of any kind.</p>
+    <h2>User Responsibilities</h2>
+    <ul><li>You agree not to use the Service for any illegal or unauthorized purpose.</li>
+    <li>You are solely responsible for any content you create using our tools.</li>
+    <li>You agree not to attempt to disrupt, overload, or interfere with the proper functioning of the Service.</li></ul>
+    <h2>Intellectual Property</h2>
+    <p>The content, design, and code of CodeToolKit are owned by us and protected by applicable intellectual property laws. You may not copy, modify, or distribute any part of the Service without our written permission.</p>
+    <h2>Limitation of Liability</h2>
+    <p>CodeToolKit shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your use of the Service. We do not guarantee that the Service will be uninterrupted, timely, secure, or error-free.</p>
+    <h2>Changes to Terms</h2>
+    <p>We reserve the right to modify these Terms at any time. Changes will be effective immediately upon posting on this page.</p>
+    <h2>Contact</h2>
+    <p>For questions about these Terms, contact us at <strong>contact@codetoolkit.com</strong>.</p>`
+  },
+  zh: {
+    nav_home: '首页', nav_html: 'HTML预览', nav_md: 'Markdown编辑', nav_blog: '博客', nav_about: '关于',
+    hero_title: '免费在线 HTML 预览 & Markdown 编辑器',
+    hero_desc: '无需注册，无需安装。直接在浏览器中编写 HTML 和 Markdown，实时预览效果。',
+    hero_btn_html: '▶ HTML预览', hero_btn_md: '✎ Markdown编辑器',
+    feat_title: '为什么选择 CodeToolKit？', feat_desc: '简洁、快速、免费的网页开发者工具。',
+    feat1_title: '⚡ 实时预览', feat1_desc: '输入即预览，所见即所得。无需保存和刷新。',
+    feat2_title: '🔒 隐私优先', feat2_desc: '所有处理都在浏览器本地完成，您的代码不会发送到任何服务器。',
+    feat3_title: '🆓 完全免费', feat3_desc: '无需注册，无使用限制，无隐藏费用。随意使用。',
+    feat4_title: '📱 移动端友好', feat4_desc: '完美适配桌面端、平板和手机设备。',
+    html_title: '在线 HTML 实时预览', html_desc: '在左侧编写 HTML 代码，右侧即时查看渲染效果。',
+    html_hint: '在下方编辑器中输入 HTML...', label_html_editor: 'HTML 编辑器', label_preview: '预览',
+    md_title: '在线 Markdown 编辑器', md_desc: '在左侧编写 Markdown，右侧查看格式化输出。',
+    md_hint: '支持标准 Markdown 语法...', label_md_editor: 'Markdown 编辑器',
+    btn_clear: '清空', btn_copy: '复制代码', btn_download: '下载', btn_copy_html: '复制HTML', btn_download_md: '下载.md',
+    blog_title: '博客与教程', blog_desc: '学习 HTML、Markdown 和网页开发技巧。', blog_back: '返回博客',
+    about_title: '关于 CodeToolKit',
+    footer_rights: '保留所有权利。',
+    footer_privacy: '隐私政策',
+    footer_terms: '服务条款',
+    privacy_title: '隐私政策',
+    terms_title: '服务条款',
+    copied: '已复制！', downloaded: '已下载！',
+    about_text: `<p>CodeToolKit 是一个免费的在线工具集，专为网页开发者、内容创作者以及任何使用 HTML 和 Markdown 的用户设计。我们的使命是提供简洁、快速、注重隐私的工具，帮助您轻松编写和预览代码。</p>
+    <h2>我们的故事</h2>
+    <p>我们创建 CodeToolKit 是因为我们厌倦了那些臃肿的在线编辑器——它们要求注册、充斥广告，或者将您的代码发送到远程服务器。我们想要一个简单的东西——一个直接在浏览器中运行的工具，好用就行。</p>
+    <h2>我们的原则</h2>
+    <ul><li><strong>隐私优先：</strong>所有代码处理都在您的浏览器中本地完成。我们绝不会将您的代码发送到任何服务器。</li>
+    <li><strong>永久免费：</strong>CodeToolKit 现在和将来都完全免费使用，无需注册。</li>
+    <li><strong>简洁高效：</strong>没有臃肿功能，没有多余设计。只有您需要的工具，运行快速。</li>
+    <li><strong>开放标准：</strong>我们支持标准的 HTML5 和 CommonMark Markdown 规范。</li></ul>
+    <h2>联系我们</h2>
+    <p>有问题或建议？我们很乐意听取您的意见。请联系 <strong>contact@codetoolkit.com</strong>。</p>`,
+    privacy_text: `<p><strong>生效日期：</strong>2026年3月30日</p>
+    <h2>引言</h2>
+    <p>CodeToolKit（"我们"、"我们的"）运营网站 codetoolkit.com。本页面告知您在使用我们的服务时，我们关于个人数据收集、使用和披露的政策。</p>
+    <h2>我们收集的信息</h2>
+    <p><strong>我们不收集个人信息。</strong>CodeToolKit 完全在您的浏览器中运行。您的 HTML 代码、Markdown 内容以及您输入的任何其他数据都在本地处理，绝不会传输到我们的服务器。</p>
+    <h2>Cookie 和分析</h2>
+    <p>我们可能使用第三方分析服务（如 Google Analytics）收集匿名使用数据，包括页面浏览量、浏览器类型和设备类型。这些数据帮助我们改进服务，不能用于识别个人用户。</p>
+    <p>我们还可能通过 Google AdSense 使用 Cookie 进行广告投放。这些 Cookie 由 Google 管理，受 <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google 隐私政策</a>约束。</p>
+    <h2>第三方服务</h2>
+    <p>我们可能展示由 Google AdSense 提供的广告。Google 及其合作伙伴可能会使用 Cookie 来根据您之前对本网站及其他网站的访问来投放广告。您可以访问 <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener">Google 广告设置</a> 选择退出个性化广告。</p>
+    <h2>儿童隐私</h2>
+    <p>我们的服务不面向13岁以下的任何人。我们不会有意收集13岁以下儿童的个人信息。</p>
+    <h2>政策变更</h2>
+    <p>我们可能会不时更新本隐私政策。我们将通过在本页面发布新的隐私政策并更新顶部的"生效日期"来通知您任何变更。</p>
+    <h2>联系我们</h2>
+    <p>如果您对本隐私政策有任何疑问，请通过 <strong>contact@codetoolkit.com</strong> 联系我们。</p>`,
+    terms_text: `<p><strong>生效日期：</strong>2026年3月30日</p>
+    <h2>条款同意</h2>
+    <p>访问和使用 CodeToolKit (codetoolkit.com)，即表示您同意受这些服务条款的约束。如果您不同意这些条款的任何部分，则不得使用我们的服务。</p>
+    <h2>服务描述</h2>
+    <p>CodeToolKit 提供免费的在线 HTML 实时预览和 Markdown 编辑工具。本服务"按原样"提供，不提供任何形式的担保。</p>
+    <h2>用户责任</h2>
+    <ul><li>您同意不会将本服务用于任何非法或未经授权的目的。</li>
+    <li>您对使用我们的工具创建的任何内容负全部责任。</li>
+    <li>您同意不会试图干扰、过载或破坏服务的正常运行。</li></ul>
+    <h2>知识产权</h2>
+    <p>CodeToolKit 的内容、设计和代码归我们所有，受适用知识产权法保护。未经我们书面许可，您不得复制、修改或分发服务的任何部分。</p>
+    <h2>责任限制</h2>
+    <p>CodeToolKit 不对因您使用本服务而产生的任何间接、附带、特殊、后果性或惩罚性损害承担责任。我们不保证服务将不间断、及时、安全或无错误。</p>
+    <h2>条款变更</h2>
+    <p>我们保留随时修改这些条款的权利。变更将在本页面发布后立即生效。</p>
+    <h2>联系我们</h2>
+    <p>如对这些条款有疑问，请通过 <strong>contact@codetoolkit.com</strong> 联系我们。</p>`
+  }
+};
+
+function toggleLang() {
+  currentLang = currentLang === 'en' ? 'zh' : 'en';
+  document.querySelector('.lang-btn').textContent = currentLang === 'en' ? '中文' : 'EN';
+  document.documentElement.lang = currentLang;
+  // Update all data-i18n elements
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (i18n[currentLang][key]) el.textContent = i18n[currentLang][key];
+  });
+  // Update dynamic content
+  document.getElementById('about-content').innerHTML = i18n[currentLang].about_text;
+  document.getElementById('privacy-content').innerHTML = i18n[currentLang].privacy_text;
+  document.getElementById('terms-content').innerHTML = i18n[currentLang].terms_text;
+  renderSeoContent();
+  renderBlog();
+  // Update page title
+  document.title = currentLang === 'en'
+    ? 'CodeToolKit - Free Online HTML Preview & Markdown Editor'
+    : 'CodeToolKit - 免费在线HTML预览与Markdown编辑器';
+}
+
+// ==================== Page Navigation ====================
+let currentPage = 'home';
+function showPage(page) {
+  currentPage = page;
+  document.querySelectorAll('.page,.article-page').forEach(p => p.classList.remove('active'));
+  const el = document.getElementById('page-' + page);
+  if (el) el.classList.add('active');
+  // Update nav active
+  document.querySelectorAll('.nav a').forEach(a => {
+    a.classList.remove('active');
+    if (a.getAttribute('onclick')?.includes(page)) a.classList.add('active');
+  });
+  if (page === 'blog') renderBlog();
+  if (page === 'about') document.getElementById('about-content').innerHTML = i18n[currentLang].about_text;
+  if (page === 'home') renderSeoContent();
+  if (page === 'privacy') document.getElementById('privacy-content').innerHTML = i18n[currentLang].privacy_text;
+  if (page === 'terms') document.getElementById('terms-content').innerHTML = i18n[currentLang].terms_text;
+  window.scrollTo(0, 0);
+}
+
+// ==================== HTML Preview Tool ====================
+const htmlEditor = document.getElementById('html-editor');
+const htmlPreview = document.getElementById('html-preview');
+let htmlTimer;
+htmlEditor.addEventListener('input', () => {
+  clearTimeout(htmlTimer);
+  htmlTimer = setTimeout(updateHtmlPreview, 200);
+});
+function updateHtmlPreview() {
+  const doc = htmlPreview.contentDocument || htmlPreview.contentWindow.document;
+  doc.open(); doc.write(htmlEditor.value); doc.close();
+}
+updateHtmlPreview();
+
+function clearHtmlEditor() { htmlEditor.value = ''; updateHtmlPreview(); }
+function copyHtmlCode() {
+  navigator.clipboard.writeText(htmlEditor.value);
+  showToast(i18n[currentLang].copied);
+}
+function downloadHtml() {
+  downloadFile('index.html', htmlEditor.value);
+  showToast(i18n[currentLang].downloaded);
+}
+
+// ==================== Markdown Editor ====================
+const mdEditor = document.getElementById('md-editor');
+const mdPreview = document.getElementById('md-preview');
+let mdTimer;
+mdEditor.addEventListener('input', () => {
+  clearTimeout(mdTimer);
+  mdTimer = setTimeout(updateMdPreview, 200);
+});
+function updateMdPreview() {
+  mdPreview.innerHTML = marked.parse(mdEditor.value, { breaks: true, gfm: true });
+}
+updateMdPreview();
+
+function clearMdEditor() { mdEditor.value = ''; mdPreview.innerHTML = ''; }
+function copyMdHtml() {
+  navigator.clipboard.writeText(marked.parse(mdEditor.value, { breaks: true, gfm: true }));
+  showToast(i18n[currentLang].copied);
+}
+function downloadMd() {
+  downloadFile('document.md', mdEditor.value);
+  showToast(i18n[currentLang].downloaded);
+}
+
+// ==================== Utilities ====================
+function downloadFile(name, content) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([content], { type: 'text/plain' }));
+  a.download = name;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.textContent = msg;
+  t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1e293b;color:#fff;padding:8px 20px;border-radius:8px;font-size:14px;z-index:9999;opacity:0;transition:opacity .3s';
+  document.body.appendChild(t);
+  requestAnimationFrame(() => t.style.opacity = '1');
+  setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 1500);
+}
+
+// ==================== Blog / SEO Articles ====================
+const articles = {
+  en: [
+    {
+      id: 'what-is-html',
+      title: 'What is HTML? A Complete Beginner\'s Guide',
+      date: '2026-03-15',
+      summary: 'Learn the fundamentals of HTML, the backbone of every web page. This guide covers everything from basic tags to semantic HTML5.',
+      body: `<h2>What is HTML?</h2>
+<p>HTML (HyperText Markup Language) is the standard language for creating web pages. Every website you visit is built with HTML at its core. It describes the structure of a web page using a series of elements that tell the browser how to display content.</p>
+<h2>Basic Structure</h2>
+<p>Every HTML document follows a basic structure:</p>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;My Page&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Hello World&lt;/h1&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<h2>Common HTML Tags</h2>
+<ul>
+<li><strong>&lt;h1&gt; to &lt;h6&gt;</strong> — Headings of different levels</li>
+<li><strong>&lt;p&gt;</strong> — Paragraphs</li>
+<li><strong>&lt;a&gt;</strong> — Links</li>
+<li><strong>&lt;img&gt;</strong> — Images</li>
+<li><strong>&lt;div&gt;</strong> — Generic container</li>
+<li><strong>&lt;ul&gt;, &lt;ol&gt;, &lt;li&gt;</strong> — Lists</li>
+</ul>
+<h2>Semantic HTML5</h2>
+<p>Modern HTML5 introduces semantic elements like &lt;header&gt;, &lt;nav&gt;, &lt;main&gt;, &lt;article&gt;, and &lt;footer&gt;. These elements clearly describe their meaning to both browsers and developers.</p>
+<h2>Try It Online</h2>
+<p>The best way to learn HTML is by practicing. Use our <a href="#" onclick="showPage('html-tool');return false">free online HTML preview tool</a> to write and test HTML code instantly in your browser.</p>`
+    },
+    {
+      id: 'markdown-guide',
+      title: 'Markdown Cheat Sheet: Everything You Need to Know',
+      date: '2026-03-18',
+      summary: 'Master Markdown syntax with this comprehensive cheat sheet. Covers headings, lists, code blocks, tables, and more.',
+      body: `<h2>What is Markdown?</h2>
+<p>Markdown is a lightweight markup language that you can use to add formatting elements to plaintext text documents. Created by John Gruber in 2004, Markdown is now one of the world's most popular markup languages.</p>
+<h2>Basic Syntax</h2>
+<ul>
+<li><strong>Headings:</strong> Use # symbols (# H1, ## H2, ### H3)</li>
+<li><strong>Bold:</strong> Wrap text with double asterisks: <code>**bold**</code></li>
+<li><strong>Italic:</strong> Wrap text with single asterisks: <code>*italic*</code></li>
+<li><strong>Links:</strong> <code>[text](URL)</code></li>
+<li><strong>Images:</strong> <code>![alt](image-url)</code></li>
+</ul>
+<h2>Advanced Features</h2>
+<p>Most Markdown processors support extended features:</p>
+<ul>
+<li><strong>Code Blocks:</strong> Wrap code with triple backticks</li>
+<li><strong>Tables:</strong> Use pipes and dashes to create tables</li>
+<li><strong>Task Lists:</strong> Use <code>- [ ]</code> for unchecked and <code>- [x]</code> for checked items</li>
+<li><strong>Blockquotes:</strong> Prefix lines with <code>&gt;</code></li>
+</ul>
+<h2>Why Use Markdown?</h2>
+<p>Markdown is widely used for documentation, README files, blog posts, and technical writing. It's readable as plain text and converts cleanly to HTML. Try our <a href="#" onclick="showPage('md-tool');return false">free online Markdown editor</a> to see it in action.</p>`
+    },
+    {
+      id: 'html-vs-markdown',
+      title: 'HTML vs Markdown: Which Should You Use?',
+      date: '2026-03-20',
+      summary: 'Comparing HTML and Markdown — when to use each one, their strengths, weaknesses, and how they complement each other.',
+      body: `<h2>The Key Differences</h2>
+<p>HTML and Markdown serve different purposes in web development and content creation. Understanding their differences helps you choose the right tool for the job.</p>
+<h2>HTML: The Full Control Option</h2>
+<p>HTML gives you complete control over every aspect of your content — layout, styling, interactivity, and semantics. It's the foundation of the web and is required for any web page.</p>
+<ul>
+<li><strong>Pros:</strong> Full control, rich features, universal browser support</li>
+<li><strong>Cons:</strong> Verbose, steep learning curve, harder to read as plain text</li>
+</ul>
+<h2>Markdown: The Simple Writing Option</h2>
+<p>Markdown is designed for readability and simplicity. It converts to HTML but is much easier to write and read in its raw form.</p>
+<ul>
+<li><strong>Pros:</strong> Easy to learn, readable as plain text, fast to write</li>
+<li><strong>Cons:</strong> Limited formatting options, needs a processor to render</li>
+</ul>
+<h2>When to Use Which?</h2>
+<ul>
+<li>Use <strong>HTML</strong> when building web pages, creating complex layouts, or needing full styling control</li>
+<li>Use <strong>Markdown</strong> when writing documentation, blog posts, notes, or any text-focused content</li>
+</ul>
+<h2>Try Both Online</h2>
+<p>Experiment with both formats using our free tools: <a href="#" onclick="showPage('html-tool');return false">HTML Preview</a> and <a href="#" onclick="showPage('md-tool');return false">Markdown Editor</a>.</p>`
+    },
+    {
+      id: 'html-preview-tool',
+      title: 'How to Preview HTML Code Online Without Installing Anything',
+      date: '2026-03-22',
+      summary: 'Learn how to test and preview your HTML code online. No downloads, no setup — just open your browser and start coding.',
+      body: `<h2>Why Preview HTML Online?</h2>
+<p>Whether you're a beginner learning HTML or an experienced developer testing a quick snippet, online HTML preview tools save time and effort. No need to set up a local development environment — just write and see results instantly.</p>
+<h2>Benefits of Online Preview Tools</h2>
+<ul>
+<li><strong>Zero Setup:</strong> No downloads or installations required</li>
+<li><strong>Instant Feedback:</strong> See your changes in real-time</li>
+<li><strong>Cross-Device:</strong> Work from any device with a browser</li>
+<li><strong>Sharing:</strong> Easily share your code by copying the URL</li>
+<li><strong>No Server Needed:</strong> Your code stays private in your browser</li>
+</ul>
+<h2>How to Use CodeToolKit's HTML Preview</h2>
+<ol>
+<li>Navigate to the <a href="#" onclick="showPage('html-tool');return false">HTML Preview tool</a></li>
+<li>Write or paste your HTML code in the editor</li>
+<li>See the rendered output in the preview pane automatically</li>
+<li>Use Clear, Copy, or Download buttons as needed</li>
+</ol>
+<h2>Tips for Effective HTML Testing</h2>
+<p>Test your HTML with different content lengths, include CSS in style tags, and use developer tools in your browser for debugging. Always test responsive layouts by resizing your browser window.</p>`
+    },
+    {
+      id: 'best-markdown-editors',
+      title: 'Top 10 Online Markdown Editors Compared (2026)',
+      date: '2026-03-25',
+      summary: 'A detailed comparison of the best online Markdown editors available in 2026. Find the right tool for your writing workflow.',
+      body: `<h2>What Makes a Great Markdown Editor?</h2>
+<p>A good online Markdown editor should offer real-time preview, a clean interface, export options, and most importantly — privacy. Your content should stay in your browser.</p>
+<h2>Key Features to Look For</h2>
+<ul>
+<li><strong>Live Preview:</strong> See formatted output as you type</li>
+<li><strong>Privacy:</strong> No server-side processing of your content</li>
+<li><strong>Export Options:</strong> Download as HTML, PDF, or .md files</li>
+<li><strong>GFM Support:</strong> GitHub Flavored Markdown extensions</li>
+<li><strong>Mobile Support:</strong> Works on phones and tablets</li>
+</ul>
+<h2>Our Recommendation</h2>
+<p>For a simple, fast, and privacy-focused experience, try <a href="#" onclick="showPage('md-tool');return false">CodeToolKit's Markdown Editor</a>. It runs entirely in your browser, supports standard Markdown and GFM, and lets you export your work with one click.</p>
+<h2>Use Cases</h2>
+<p>Online Markdown editors are perfect for writing blog posts, technical documentation, README files, meeting notes, and any content where formatting matters but you don't need a full word processor.</p>`
+    },
+    {
+      id: 'html-best-practices',
+      title: '10 HTML Best Practices Every Developer Should Follow',
+      date: '2026-03-28',
+      summary: 'Write cleaner, more maintainable HTML with these essential best practices. From semantic elements to accessibility standards.',
+      body: `<h2>1. Use Semantic Elements</h2>
+<p>Replace generic &lt;div&gt; tags with meaningful elements like &lt;header&gt;, &lt;nav&gt;, &lt;main&gt;, &lt;article&gt;, and &lt;footer&gt;. This improves both accessibility and SEO.</p>
+<h2>2. Always Include a DOCTYPE</h2>
+<p>Start every HTML file with <code>&lt;!DOCTYPE html&gt;</code> to ensure standards mode rendering.</p>
+<h2>3. Add Alt Text to Images</h2>
+<p>Every &lt;img&gt; tag should have descriptive alt text for accessibility and SEO.</p>
+<h2>4. Use Proper Heading Hierarchy</h2>
+<p>Don't skip heading levels. Start with &lt;h1&gt; and follow a logical order.</p>
+<h2>5. Keep Your Code Indented</h2>
+<p>Proper indentation makes your HTML readable and maintainable.</p>
+<h2>6. Minify for Production</h2>
+<p>Remove unnecessary whitespace and comments in production HTML to reduce file size.</p>
+<h2>7. Use Meta Tags</h2>
+<p>Include meta description, viewport, and charset tags for better SEO and mobile experience.</p>
+<h2>8. Validate Your HTML</h2>
+<p>Use the W3C Validator to catch errors and ensure your HTML follows standards.</p>
+<h2>9. Avoid Inline Styles</h2>
+<p>Keep styling separate in CSS files or &lt;style&gt; tags for better maintainability.</p>
+<h2>10. Test Across Browsers</h2>
+<p>Always test your HTML in multiple browsers to ensure consistent rendering.</p>
+<p>Practice these tips using our <a href="#" onclick="showPage('html-tool');return false">free HTML preview tool</a>.</p>`
+    }
+  ],
+  zh: [
+    {
+      id: 'what-is-html',
+      title: '什么是HTML？完全新手入门指南',
+      date: '2026-03-15',
+      summary: '学习 HTML 的基础知识，它是每个网页的基石。本指南涵盖从基础标签到 HTML5 语义化元素的所有内容。',
+      body: `<h2>什么是 HTML？</h2>
+<p>HTML（超文本标记语言）是创建网页的标准语言。您访问的每个网站都建立在 HTML 之上。它使用一系列元素来描述网页的结构，告诉浏览器如何显示内容。</p>
+<h2>基本结构</h2>
+<p>每个 HTML 文档都遵循基本结构：</p>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;我的页面&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;你好世界&lt;/h1&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<h2>常用 HTML 标签</h2>
+<ul>
+<li><strong>&lt;h1&gt; 到 &lt;h6&gt;</strong> — 不同级别的标题</li>
+<li><strong>&lt;p&gt;</strong> — 段落</li>
+<li><strong>&lt;a&gt;</strong> — 链接</li>
+<li><strong>&lt;img&gt;</strong> — 图片</li>
+<li><strong>&lt;div&gt;</strong> — 通用容器</li>
+<li><strong>&lt;ul&gt;、&lt;ol&gt;、&lt;li&gt;</strong> — 列表</li>
+</ul>
+<h2>HTML5 语义化</h2>
+<p>现代 HTML5 引入了语义化元素，如 &lt;header&gt;、&lt;nav&gt;、&lt;main&gt;、&lt;article&gt; 和 &lt;footer&gt;。这些元素清晰地描述了它们的含义。</p>
+<h2>在线尝试</h2>
+<p>学习 HTML 的最佳方式就是动手实践。使用我们的<a href="#" onclick="showPage('html-tool');return false">免费在线HTML预览工具</a>，直接在浏览器中编写和测试 HTML 代码。</p>`
+    },
+    {
+      id: 'markdown-guide',
+      title: 'Markdown 速查表：你需要知道的一切',
+      date: '2026-03-18',
+      summary: '通过这份全面的速查表掌握 Markdown 语法。涵盖标题、列表、代码块、表格等。',
+      body: `<h2>什么是 Markdown？</h2>
+<p>Markdown 是一种轻量级标记语言，用于为纯文本文档添加格式化元素。由 John Gruber 于2004年创建，如今 Markdown 已成为世界上最受欢迎的标记语言之一。</p>
+<h2>基本语法</h2>
+<ul>
+<li><strong>标题：</strong>使用 # 号（# H1，## H2，### H3）</li>
+<li><strong>粗体：</strong>用双星号包裹：<code>**粗体**</code></li>
+<li><strong>斜体：</strong>用单星号包裹：<code>*斜体*</code></li>
+<li><strong>链接：</strong><code>[文本](URL)</code></li>
+<li><strong>图片：</strong><code>![描述](图片URL)</code></li>
+</ul>
+<h2>高级功能</h2>
+<ul>
+<li><strong>代码块：</strong>用三个反引号包裹代码</li>
+<li><strong>表格：</strong>使用竖线和短横线创建表格</li>
+<li><strong>任务列表：</strong>使用 <code>- [ ]</code> 和 <code>- [x]</code></li>
+<li><strong>引用：</strong>在行首加 <code>&gt;</code></li>
+</ul>
+<h2>为什么要用 Markdown？</h2>
+<p>Markdown 广泛用于文档编写、README 文件、博客文章和技术写作。它以纯文本形式可读，并能干净地转换为 HTML。试试我们的<a href="#" onclick="showPage('md-tool');return false">免费在线 Markdown 编辑器</a>来体验。</p>`
+    },
+    {
+      id: 'html-vs-markdown',
+      title: 'HTML 与 Markdown 对比：你应该用哪个？',
+      date: '2026-03-20',
+      summary: '比较 HTML 和 Markdown — 何时使用哪个，各自的优缺点，以及它们如何互补。',
+      body: `<h2>核心区别</h2>
+<p>HTML 和 Markdown 在网页开发和内容创作中各有用途。了解它们的区别有助于您为工作选择合适的工具。</p>
+<h2>HTML：完全控制的选择</h2>
+<p>HTML 让您对内容的每个方面都有完全的控制权 — 布局、样式、交互和语义。它是网页的基础。</p>
+<ul>
+<li><strong>优点：</strong>完全控制、功能丰富、浏览器通用支持</li>
+<li><strong>缺点：</strong>冗长、学习曲线陡峭、作为纯文本不易阅读</li>
+</ul>
+<h2>Markdown：简洁写作的选择</h2>
+<p>Markdown 旨在提高可读性和简洁性。它能转换为 HTML，但原始形式更易编写和阅读。</p>
+<ul>
+<li><strong>优点：</strong>易学、纯文本可读、编写快速</li>
+<li><strong>缺点：</strong>格式化选项有限、需要处理器渲染</li>
+</ul>
+<h2>何时用哪个？</h2>
+<ul>
+<li>构建网页、创建复杂布局时使用 <strong>HTML</strong></li>
+<li>编写文档、博客文章、笔记时使用 <strong>Markdown</strong></li>
+</ul>
+<h2>在线体验</h2>
+<p>使用我们的免费工具体验两种格式：<a href="#" onclick="showPage('html-tool');return false">HTML预览</a> 和 <a href="#" onclick="showPage('md-tool');return false">Markdown编辑器</a>。</p>`
+    },
+    {
+      id: 'html-preview-tool',
+      title: '如何在线预览HTML代码（无需安装任何软件）',
+      date: '2026-03-22',
+      summary: '学习如何在线测试和预览 HTML 代码。无需下载，无需设置 — 打开浏览器即可开始编码。',
+      body: `<h2>为什么要在线预览 HTML？</h2>
+<p>无论您是学习 HTML 的初学者还是测试代码片段的资深开发者，在线 HTML 预览工具都能节省时间和精力。无需搭建本地开发环境 — 编写即可看到结果。</p>
+<h2>在线预览工具的优势</h2>
+<ul>
+<li><strong>零配置：</strong>无需下载或安装</li>
+<li><strong>即时反馈：</strong>实时查看更改效果</li>
+<li><strong>跨设备：</strong>任何有浏览器的设备都能使用</li>
+<li><strong>保护隐私：</strong>代码保留在您的浏览器中</li>
+</ul>
+<h2>如何使用 CodeToolKit 的 HTML 预览</h2>
+<ol>
+<li>进入 <a href="#" onclick="showPage('html-tool');return false">HTML 预览工具</a></li>
+<li>在编辑器中编写或粘贴 HTML 代码</li>
+<li>自动在预览面板中看到渲染输出</li>
+<li>根据需要使用清空、复制或下载按钮</li>
+</ol>
+<h2>高效测试技巧</h2>
+<p>用不同长度的内容测试 HTML，在 style 标签中包含 CSS，利用浏览器开发者工具进行调试。始终通过调整浏览器窗口大小来测试响应式布局。</p>`
+    },
+    {
+      id: 'best-markdown-editors',
+      title: '2026年十大在线 Markdown 编辑器评测对比',
+      date: '2026-03-25',
+      summary: '详细对比 2026 年最佳的在线 Markdown 编辑器，找到最适合您写作工作流的工具。',
+      body: `<h2>什么造就了优秀的 Markdown 编辑器？</h2>
+<p>一个好的在线 Markdown 编辑器应该提供实时预览、简洁界面、导出选项，最重要的是 — 保护隐私。您的内容应该留在您的浏览器中。</p>
+<h2>核心功能对比标准</h2>
+<ul>
+<li><strong>实时预览：</strong>输入时即时查看格式化输出</li>
+<li><strong>隐私保护：</strong>不在服务器端处理您的内容</li>
+<li><strong>导出功能：</strong>支持下载为 HTML、PDF 或 .md 文件</li>
+<li><strong>GFM 支持：</strong>GitHub 风格的 Markdown 扩展</li>
+<li><strong>移动端支持：</strong>在手机和平板上正常使用</li>
+</ul>
+<h2>我们的推荐</h2>
+<p>想要简洁、快速、注重隐私的体验，试试 <a href="#" onclick="showPage('md-tool');return false">CodeToolKit 的 Markdown 编辑器</a>。它完全在浏览器中运行，支持标准 Markdown 和 GFM，一键导出。</p>
+<h2>使用场景</h2>
+<p>在线 Markdown 编辑器非常适合编写博客文章、技术文档、README 文件、会议记录等注重格式但不需要完整文字处理器的内容。</p>`
+    },
+    {
+      id: 'html-best-practices',
+      title: '每个开发者都应遵循的10个HTML最佳实践',
+      date: '2026-03-28',
+      summary: '通过这些核心最佳实践编写更简洁、更可维护的 HTML。从语义化元素到无障碍标准。',
+      body: `<h2>1. 使用语义化元素</h2>
+<p>用有意义的元素（如 &lt;header&gt;、&lt;nav&gt;、&lt;main&gt;、&lt;article&gt;、&lt;footer&gt;）替换通用的 &lt;div&gt; 标签。这能提升可访问性和 SEO。</p>
+<h2>2. 始终包含 DOCTYPE</h2>
+<p>每个 HTML 文件都以 <code>&lt;!DOCTYPE html&gt;</code> 开头，确保标准模式渲染。</p>
+<h2>3. 为图片添加 Alt 文本</h2>
+<p>每个 &lt;img&gt; 标签都应有描述性的 alt 文本，提升可访问性和 SEO。</p>
+<h2>4. 使用正确的标题层级</h2>
+<p>不要跳过标题级别。从 &lt;h1&gt; 开始，按逻辑顺序排列。</p>
+<h2>5. 保持代码缩进</h2>
+<p>适当的缩进使 HTML 更易读、更易维护。</p>
+<h2>6. 生产环境压缩代码</h2>
+<p>移除多余的空白和注释以减小文件大小。</p>
+<h2>7. 使用 Meta 标签</h2>
+<p>包含 meta description、viewport 和 charset 标签，优化 SEO 和移动端体验。</p>
+<h2>8. 验证 HTML</h2>
+<p>使用 W3C 验证器检查错误，确保 HTML 符合标准。</p>
+<h2>9. 避免内联样式</h2>
+<p>将样式放在 CSS 文件或 &lt;style&gt; 标签中，提高可维护性。</p>
+<h2>10. 跨浏览器测试</h2>
+<p>始终在多个浏览器中测试 HTML，确保渲染一致。</p>
+<p>使用我们的 <a href="#" onclick="showPage('html-tool');return false">免费 HTML 预览工具</a> 来练习这些技巧。</p>`
+    }
+  ]
+};
+
+function renderBlog() {
+  const list = articles[currentLang];
+  const grid = document.getElementById('blog-grid');
+  grid.innerHTML = list.map(a => `
+    <div class="blog-card" onclick="showArticle('${a.id}')">
+      <div class="blog-card-body">
+        <h3>${a.title}</h3>
+        <p>${a.summary}</p>
+        <div class="blog-card-meta">${a.date}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function showArticle(id) {
+  const list = articles[currentLang];
+  const article = list.find(a => a.id === id);
+  if (!article) return;
+  document.querySelectorAll('.page,.article-page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-article').classList.add('active');
+  document.getElementById('article-title').textContent = article.title;
+  document.getElementById('article-meta').textContent = article.date;
+  document.getElementById('article-body').innerHTML = article.body;
+  // Update nav active
+  document.querySelectorAll('.nav a').forEach(a => a.classList.remove('active'));
+  document.querySelectorAll('.nav a')[3].classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+// ==================== SEO Content (Dynamic) ====================
+const seoContent = {
+  en: {
+    section1: `<div class="seo-section"><div class="seo-grid"><div>
+      <span class="seo-tag">HTML</span>
+      <h2>What is HTML? The Language Behind Every Website</h2>
+      <p>HTML (HyperText Markup Language) is the standard markup language used to create and structure content on the World Wide Web. Developed by Tim Berners-Lee in 1991, HTML has evolved through multiple versions, with HTML5 being the latest major standard supported by all modern browsers.</p>
+      <p>Every web page you visit — from simple text pages to complex web applications — is built with HTML at its foundation. HTML uses a system of <strong>tags</strong> enclosed in angle brackets (like <code>&lt;h1&gt;</code>, <code>&lt;p&gt;</code>, <code>&lt;a&gt;</code>) to define the structure and meaning of content. These tags tell the browser how to display text, images, links, forms, and other elements.</p>
+      <h3>How Does HTML Work?</h3>
+      <p>HTML works by nesting elements inside each other to create a hierarchical document structure. A typical HTML document consists of a <code>&lt;head&gt;</code> section (containing metadata) and a <code>&lt;body&gt;</code> section (containing visible content). When you open an HTML file in a browser, the browser reads these tags and renders the page accordingly.</p>
+      <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;My First Page&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Welcome to My Website&lt;/h1&gt;
+  &lt;p&gt;This is a paragraph of text.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+      <h3>Essential HTML Tags Every Beginner Should Know</h3>
+      <ul>
+        <li><strong><code>&lt;h1&gt;</code> – <code>&lt;h6&gt;</code></strong> — Define headings from most important (h1) to least (h6)</li>
+        <li><strong><code>&lt;p&gt;</code></strong> — Creates a paragraph of text</li>
+        <li><strong><code>&lt;a href="..."&gt;</code></strong> — Creates a hyperlink to another page or resource</li>
+        <li><strong><code>&lt;img src="..."&gt;</code></strong> — Embeds an image</li>
+        <li><strong><code>&lt;div&gt;</code></strong> — A generic container for grouping elements</li>
+        <li><strong><code>&lt;ul&gt;</code> / <code>&lt;ol&gt;</code> / <code>&lt;li&gt;</code></strong> — Create unordered lists, ordered lists, and list items</li>
+        <li><strong><code>&lt;table&gt;</code></strong> — Defines a data table with rows (<code>&lt;tr&gt;</code>) and cells (<code>&lt;td&gt;</code>)</li>
+        <li><strong><code>&lt;form&gt;</code></strong> — Creates an interactive form with inputs, buttons, and more</li>
+      </ul>
+      </div><div>
+      <h3>How to Use HTML: A Step-by-Step Guide</h3>
+      <ol>
+        <li><strong>Learn the basic tags.</strong> Start with headings, paragraphs, links, and images. These four tags cover most basic web content.</li>
+        <li><strong>Understand document structure.</strong> Every HTML page needs <code>&lt;!DOCTYPE html&gt;</code>, <code>&lt;html&gt;</code>, <code>&lt;head&gt;</code>, and <code>&lt;body&gt;</code>.</li>
+        <li><strong>Add CSS for styling.</strong> Use the <code>&lt;style&gt;</code> tag or external CSS files to control colors, fonts, layouts, and visual design.</li>
+        <li><strong>Add JavaScript for interactivity.</strong> Use the <code>&lt;script&gt;</code> tag to add dynamic behavior like form validation, animations, and user interactions.</li>
+        <li><strong>Test in a browser.</strong> Save your file with a <code>.html</code> extension and open it in any web browser to see the result.</li>
+      </ol>
+      <h3>HTML5: The Modern Standard</h3>
+      <p>HTML5 introduced powerful new features that make web development easier and more capable:</p>
+      <ul>
+        <li><strong>Semantic elements:</strong> <code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;article&gt;</code>, <code>&lt;section&gt;</code>, <code>&lt;footer&gt;</code> improve accessibility and SEO</li>
+        <li><strong>Multimedia:</strong> Native <code>&lt;video&gt;</code> and <code>&lt;audio&gt;</code> tags eliminate the need for Flash</li>
+        <li><strong>Forms:</strong> New input types like email, date, range, and color with built-in validation</li>
+        <li><strong>Canvas:</strong> The <code>&lt;canvas&gt;</code> element enables 2D and 3D graphics rendering</li>
+        <li><strong>APIs:</strong> Geolocation, drag-and-drop, local storage, and more built-in browser APIs</li>
+      </ul>
+      <h3>Try It Right Now — No Installation Needed</h3>
+      <p>You don't need to install any software to start writing HTML. Open our <a href="#" onclick="showPage('html-tool');return false">free online HTML preview tool</a>, type your HTML code in the editor, and see the rendered result instantly. It's the fastest way to learn and experiment with HTML.</p>
+      </div></div></div>`,
+    section2: `<div class="seo-section"><div class="seo-grid"><div>
+      <span class="seo-tag">Markdown</span>
+      <h2>What is Markdown? The Simplest Way to Format Text</h2>
+      <p>Markdown is a lightweight markup language created by John Gruber in 2004. It allows you to write formatted content using plain text syntax that is easy to read and write. Instead of complex tags, Markdown uses simple characters like asterisks for bold text, hash symbols for headings, and dashes for lists.</p>
+      <p>Today, Markdown is one of the most widely used writing formats in the world. It's the standard for README files on GitHub, documentation on most tech platforms, blog posts on static site generators, and note-taking apps. Its simplicity and portability make it the go-to choice for developers, writers, and content creators.</p>
+      <h3>Why Should You Use Markdown?</h3>
+      <ul>
+        <li><strong>Easy to learn:</strong> The entire syntax fits on a single page. Most people pick it up in under 10 minutes.</li>
+        <li><strong>Readable as plain text:</strong> Unlike HTML, Markdown files are perfectly readable without any rendering — even in a basic text editor.</li>
+        <li><strong>Converts to HTML:</strong> Markdown was designed to convert cleanly to HTML, making it perfect for web publishing.</li>
+        <li><strong>Universal support:</strong> Supported by GitHub, GitLab, Notion, Slack, Discord, Jira, and thousands of other tools.</li>
+        <li><strong>Version control friendly:</strong> Being plain text, Markdown diffs cleanly in Git and other version control systems.</li>
+      </ul>
+      <h3>Markdown Syntax Cheat Sheet</h3>
+      <pre><code># Heading 1          | H1 title
+## Heading 2         | H2 subtitle
+### Heading 3        | H3 sub-subtitle
+
+**bold text**        | bold text
+*italic text*        | italic text
+~~strikethrough~~    | strikethrough
+
+[link](https://url)  | Hyperlink
+![image](url.jpg)   | Embedded image
+
+- Item one           | Bullet list
+- Item two
+
+1. First             | Numbered list
+2. Second
+
+> Blockquote         | Quoted text
+
+\`inline code\`        | Code snippet</code></pre>
+      </div><div>
+      <h3>How to Use Markdown: A Practical Guide</h3>
+      <ol>
+        <li><strong>Start with the basics.</strong> Learn headings (<code>#</code>), bold (<code>**text**</code>), italic (<code>*text*</code>), and links (<code>[text](url)</code>). These four cover most writing needs.</li>
+        <li><strong>Add lists and structure.</strong> Use <code>-</code> for bullet lists and <code>1.</code> for numbered lists. Indent with spaces for nested lists.</li>
+        <li><strong>Include code blocks.</strong> Wrap code with triple backticks (<code>\`\`\`</code>) for syntax-highlighted code blocks. Add the language name for automatic highlighting.</li>
+        <li><strong>Use tables.</strong> Create tables with pipes and dashes for structured data presentation.</li>
+        <li><strong>Add task lists.</strong> Use <code>- [ ]</code> for incomplete tasks and <code>- [x]</code> for completed tasks — perfect for project tracking.</li>
+        <li><strong>Preview your work.</strong> Use a Markdown editor with live preview to see your formatted output as you type.</li>
+      </ol>
+      <h3>Advanced Markdown Features (GFM)</h3>
+      <p>GitHub Flavored Markdown (GFM) extends the standard with powerful additions:</p>
+      <ul>
+        <li><strong>Task lists:</strong> <code>- [x] Done</code> / <code>- [ ] Todo</code></li>
+        <li><strong>Tables:</strong> Structured data with aligned columns</li>
+        <li><strong>Strikethrough:</strong> <code>~~deleted text~~</code></li>
+        <li><strong>Syntax highlighting:</strong> <code>\`\`\`javascript</code> for language-specific code coloring</li>
+        <li><strong>Auto-links:</strong> URLs and @mentions are automatically converted to links</li>
+      </ul>
+      <h3>Common Use Cases for Markdown</h3>
+      <ul>
+        <li><strong>Technical documentation:</strong> API docs, user guides, and tutorials</li>
+        <li><strong>README files:</strong> Project descriptions on GitHub and GitLab</li>
+        <li><strong>Blog writing:</strong> Static site generators like Hugo, Jekyll, and Gatsby use Markdown</li>
+        <li><strong>Note-taking:</strong> Apps like Obsidian, Notion, and Bear use Markdown</li>
+        <li><strong>Communication:</strong> Slack, Discord, and GitHub comments all support Markdown</li>
+      </ul>
+      <h3>Try It Right Now — Free Online Markdown Editor</h3>
+      <p>Open our <a href="#" onclick="showPage('md-tool');return false">free online Markdown editor</a> to start writing in Markdown immediately. You'll see your formatted output in real-time as you type, with full support for standard Markdown and GFM extensions.</p>
+      </div></div></div>`,
+    section3: `<div class="seo-section"><div class="seo-grid"><div>
+      <span class="seo-tag">HTML + Markdown</span>
+      <h2>How HTML and Markdown Work Together</h2>
+      <p>HTML and Markdown are not competing technologies — they complement each other beautifully. Markdown is designed to be a simpler, more readable alternative to HTML for writing content, and most Markdown processors convert Markdown syntax into HTML behind the scenes.</p>
+      <p>In practice, many developers and writers use both daily: Markdown for drafting content quickly, and HTML for fine-tuning web page layouts and adding custom styling. Understanding both gives you the flexibility to choose the right tool for each task.</p>
+      <h3>When to Use HTML vs Markdown</h3>
+      <ul>
+        <li><strong>Use HTML</strong> when building complete web pages, designing layouts, adding interactive elements, or needing pixel-perfect control over styling</li>
+        <li><strong>Use Markdown</strong> when writing articles, documentation, README files, notes, or any content where readability and speed matter more than visual design</li>
+        <li><strong>Use both</strong> when writing Markdown content that needs occasional HTML customization (most Markdown processors allow inline HTML)</li>
+      </ul>
+      </div><div>
+      <h3>Free Tools to Get Started</h3>
+      <p>CodeToolKit provides two free online tools that help you work with both formats — no registration, no installation, and no limits:</p>
+      <ul>
+        <li><strong><a href="#" onclick="showPage('html-tool');return false">HTML Live Preview</a></strong> — Write HTML code and see the rendered page instantly. Perfect for testing snippets, learning HTML, or prototyping layouts.</li>
+        <li><strong><a href="#" onclick="showPage('md-tool');return false">Markdown Editor</a></strong> — Write Markdown with real-time preview. Supports standard Markdown, GFM extensions, code blocks, tables, and task lists. Export to HTML or download as .md file.</li>
+      </ul>
+      <p>Both tools run entirely in your browser. Your code and content are never sent to any server, ensuring complete privacy. Start using them today — it's completely free.</p>
+      </div></div></div>`
+  },
+  zh: {
+    section1: `<div class="seo-section"><div class="seo-grid"><div>
+      <span class="seo-tag">HTML</span>
+      <h2>什么是HTML？每个网站背后的语言</h2>
+      <p>HTML（超文本标记语言）是用于在万维网上创建和构建内容的标准标记语言。由 Tim Berners-Lee 于1991年开发，HTML 经历了多个版本的演进，HTML5 是目前所有现代浏览器支持的最新主要标准。</p>
+      <p>您访问的每个网页 — 从简单的文本页面到复杂的网络应用 — 都建立在 HTML 之上。HTML 使用尖括号中的<strong>标签</strong>（如 <code>&lt;h1&gt;</code>、<code>&lt;p&gt;</code>、<code>&lt;a&gt;</code>）来定义内容的结构和含义。这些标签告诉浏览器如何显示文本、图片、链接、表单和其他元素。</p>
+      <h3>HTML 是如何工作的？</h3>
+      <p>HTML 通过将元素相互嵌套来创建层级化的文档结构。一个典型的 HTML 文档由 <code>&lt;head&gt;</code> 部分（包含元数据）和 <code>&lt;body&gt;</code> 部分（包含可见内容）组成。当您在浏览器中打开 HTML 文件时，浏览器会读取这些标签并相应地渲染页面。</p>
+      <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="zh-CN"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;我的第一个页面&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;欢迎来到我的网站&lt;/h1&gt;
+  &lt;p&gt;这是一个文本段落。&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+      <h3>每个新手都应了解的 HTML 核心标签</h3>
+      <ul>
+        <li><strong><code>&lt;h1&gt;</code> – <code>&lt;h6&gt;</code></strong> — 定义从最重要（h1）到最次要（h6）的标题</li>
+        <li><strong><code>&lt;p&gt;</code></strong> — 创建文本段落</li>
+        <li><strong><code>&lt;a href="..."&gt;</code></strong> — 创建指向其他页面或资源的超链接</li>
+        <li><strong><code>&lt;img src="..."&gt;</code></strong> — 嵌入图片</li>
+        <li><strong><code>&lt;div&gt;</code></strong> — 用于分组元素的通用容器</li>
+        <li><strong><code>&lt;ul&gt;</code> / <code>&lt;ol&gt;</code> / <code>&lt;li&gt;</code></strong> — 创建无序列表、有序列表和列表项</li>
+        <li><strong><code>&lt;table&gt;</code></strong> — 定义由行（<code>&lt;tr&gt;</code>）和单元格（<code>&lt;td&gt;</code>）组成的数据表格</li>
+        <li><strong><code>&lt;form&gt;</code></strong> — 创建包含输入框、按钮等的交互式表单</li>
+      </ul>
+      </div><div>
+      <h3>如何使用HTML：分步指南</h3>
+      <ol>
+        <li><strong>学习基础标签。</strong>从标题、段落、链接和图片开始。这四个标签涵盖了大多数基本网页内容。</li>
+        <li><strong>理解文档结构。</strong>每个 HTML 页面都需要 <code>&lt;!DOCTYPE html&gt;</code>、<code>&lt;html&gt;</code>、<code>&lt;head&gt;</code> 和 <code>&lt;body&gt;</code>。</li>
+        <li><strong>添加 CSS 进行样式设计。</strong>使用 <code>&lt;style&gt;</code> 标签或外部 CSS 文件来控制颜色、字体、布局和视觉设计。</li>
+        <li><strong>添加 JavaScript 实现交互。</strong>使用 <code>&lt;script&gt;</code> 标签添加动态行为，如表单验证、动画和用户交互。</li>
+        <li><strong>在浏览器中测试。</strong>将文件保存为 <code>.html</code> 扩展名，在任何浏览器中打开即可查看结果。</li>
+      </ol>
+      <h3>HTML5：现代标准</h3>
+      <p>HTML5 引入了强大的新功能，使网页开发更加简便和强大：</p>
+      <ul>
+        <li><strong>语义化元素：</strong><code>&lt;header&gt;</code>、<code>&lt;nav&gt;</code>、<code>&lt;main&gt;</code>、<code>&lt;article&gt;</code>、<code>&lt;section&gt;</code>、<code>&lt;footer&gt;</code> 提升可访问性和 SEO</li>
+        <li><strong>多媒体：</strong>原生 <code>&lt;video&gt;</code> 和 <code>&lt;audio&gt;</code> 标签，无需 Flash</li>
+        <li><strong>表单：</strong>新增 email、date、range、color 等输入类型，内置验证功能</li>
+        <li><strong>画布：</strong><code>&lt;canvas&gt;</code> 元素支持 2D 和 3D 图形渲染</li>
+        <li><strong>API：</strong>地理定位、拖拽、本地存储等内置浏览器 API</li>
+      </ul>
+      <h3>现在就试试 — 无需安装任何软件</h3>
+      <p>您不需要安装任何软件就能开始编写 HTML。打开我们的<a href="#" onclick="showPage('html-tool');return false">免费在线HTML预览工具</a>，在编辑器中输入 HTML 代码，即可即时看到渲染结果。这是学习和实验 HTML 最快的方式。</p>
+      </div></div></div>`,
+    section2: `<div class="seo-section"><div class="seo-grid"><div>
+      <span class="seo-tag">Markdown</span>
+      <h2>什么是Markdown？最简单的文本格式化方式</h2>
+      <p>Markdown 是由 John Gruber 于2004年创建的轻量级标记语言。它允许您使用易于读写纯文本语法来编写格式化内容。Markdown 不使用复杂的标签，而是使用简单的字符，如星号表示粗体、井号表示标题、短横线表示列表。</p>
+      <p>如今，Markdown 是世界上最广泛使用的写作格式之一。它是 GitHub 上 README 文件的标准、大多数技术平台的文档格式、静态网站生成器的博客格式，以及笔记应用的通用格式。其简洁性和可移植性使其成为开发者、写作者和内容创作者的首选。</p>
+      <h3>为什么要使用 Markdown？</h3>
+      <ul>
+        <li><strong>易于学习：</strong>全部语法可以写在一页纸上。大多数人10分钟内就能掌握。</li>
+        <li><strong>纯文本可读：</strong>与 HTML 不同，Markdown 文件即使不渲染也完全可以阅读 — 即便在最简单的文本编辑器中。</li>
+        <li><strong>可转换为HTML：</strong>Markdown 被设计为可以干净地转换为 HTML，非常适合网页发布。</li>
+        <li><strong>通用支持：</strong>被 GitHub、GitLab、Notion、Slack、Discord、Jira 等数千种工具支持。</li>
+        <li><strong>版本控制友好：</strong>作为纯文本，Markdown 在 Git 和其他版本控制系统中的差异对比非常清晰。</li>
+      </ul>
+      <h3>Markdown 语法速查表</h3>
+      <pre><code># 标题1              | 一级标题
+## 标题2             | 二级标题
+### 标题3            | 三级标题
+
+**粗体文本**         | 粗体
+*斜体文本*           | 斜体
+~~删除线~~           | 删除线
+
+[链接](https://url)  | 超链接
+![图片](url.jpg)    | 嵌入图片
+
+- 项目一             | 无序列表
+- 项目二
+
+1. 第一项            | 有序列表
+2. 第二项
+
+> 引用文本           | 引用
+
+\`行内代码\`          | 代码片段</code></pre>
+      </div><div>
+      <h3>如何使用 Markdown：实用指南</h3>
+      <ol>
+        <li><strong>从基础开始。</strong>学习标题（<code>#</code>）、粗体（<code>**文本**</code>）、斜体（<code>*文本*</code>）和链接（<code>[文本](url)</code>）。这四个语法覆盖了大部分写作需求。</li>
+        <li><strong>添加列表和结构。</strong>使用 <code>-</code> 创建无序列表，<code>1.</code> 创建有序列表。用空格缩进创建嵌套列表。</li>
+        <li><strong>包含代码块。</strong>用三个反引号（<code>\`\`\`</code>）包裹代码，实现语法高亮的代码块。添加语言名称可自动高亮。</li>
+        <li><strong>使用表格。</strong>用竖线和短横线创建表格，用于结构化数据展示。</li>
+        <li><strong>添加任务列表。</strong>使用 <code>- [ ]</code> 表示未完成，<code>- [x]</code> 表示已完成 — 非常适合项目跟踪。</li>
+        <li><strong>预览你的作品。</strong>使用带实时预览的 Markdown 编辑器，输入时即可查看格式化输出。</li>
+      </ol>
+      <h3>高级 Markdown 功能 (GFM)</h3>
+      <p>GitHub 风格 Markdown（GFM）在标准基础上增加了强大的扩展：</p>
+      <ul>
+        <li><strong>任务列表：</strong><code>- [x] 已完成</code> / <code>- [ ] 待办</code></li>
+        <li><strong>表格：</strong>带对齐列的结构化数据</li>
+        <li><strong>删除线：</strong><code>~~已删除的文本~~</code></li>
+        <li><strong>语法高亮：</strong><code>\`\`\`javascript</code> 实现特定语言的代码着色</li>
+        <li><strong>自动链接：</strong>URL 和 @提及会自动转换为链接</li>
+      </ul>
+      <h3>Markdown 的常见使用场景</h3>
+      <ul>
+        <li><strong>技术文档：</strong>API 文档、用户指南和教程</li>
+        <li><strong>README 文件：</strong>GitHub 和 GitLab 上的项目描述</li>
+        <li><strong>博客写作：</strong>Hugo、Jekyll、Hexo 等静态网站生成器使用 Markdown</li>
+        <li><strong>笔记记录：</strong>Obsidian、Notion、Bear 等应用使用 Markdown</li>
+        <li><strong>日常沟通：</strong>Slack、Discord 和 GitHub 评论都支持 Markdown</li>
+      </ul>
+      <h3>现在就试试 — 免费在线 Markdown 编辑器</h3>
+      <p>打开我们的<a href="#" onclick="showPage('md-tool');return false">免费在线 Markdown 编辑器</a>，立即开始使用 Markdown 写作。您将在输入时实时看到格式化输出，全面支持标准 Markdown 和 GFM 扩展。</p>
+      </div></div></div>`,
+    section3: `<div class="seo-section"><div class="seo-grid"><div>
+      <span class="seo-tag">HTML + Markdown</span>
+      <h2>HTML 和 Markdown 如何配合使用</h2>
+      <p>HTML 和 Markdown 不是相互竞争的技术 — 它们完美互补。Markdown 被设计为一种更简单、更易读的 HTML 替代方案用于编写内容，而大多数 Markdown 处理器会在后台将 Markdown 语法转换为 HTML。</p>
+      <p>在实际工作中，许多开发者和写作者每天都同时使用两者：用 Markdown 快速起草内容，用 HTML 精调网页布局和添加自定义样式。同时了解两者让您能灵活地为每个任务选择合适的工具。</p>
+      <h3>何时使用 HTML 还是 Markdown</h3>
+      <ul>
+        <li><strong>使用 HTML</strong>：构建完整网页、设计布局、添加交互元素，或需要像素级精确的样式控制时</li>
+        <li><strong>使用 Markdown</strong>：编写文章、文档、README 文件、笔记，或任何可读性和速度比视觉设计更重要时</li>
+        <li><strong>两者结合使用</strong>：当 Markdown 内容需要偶尔使用 HTML 自定义时（大多数 Markdown 处理器允许内联 HTML）</li>
+      </ul>
+      </div><div>
+      <h3>免费工具助您入门</h3>
+      <p>CodeToolKit 提供两个免费的在线工具，帮助您使用这两种格式 — 无需注册、无需安装、无使用限制：</p>
+      <ul>
+        <li><strong><a href="#" onclick="showPage('html-tool');return false">HTML 实时预览</a></strong> — 编写 HTML 代码，即时查看渲染页面。非常适合测试代码片段、学习 HTML 或原型设计布局。</li>
+        <li><strong><a href="#" onclick="showPage('md-tool');return false">Markdown 编辑器</a></strong> — 带实时预览的 Markdown 编辑。支持标准 Markdown、GFM 扩展、代码块、表格和任务列表。可导出为 HTML 或下载 .md 文件。</li>
+      </ul>
+      <p>两个工具都完全在您的浏览器中运行。您的代码和内容绝不会发送到任何服务器，确保完全隐私。今天就试试 — 完全免费。</p>
+      </div></div></div>`
+  }
+};
+
+function renderSeoContent() {
+  const el = document.getElementById('seo-content');
+  if (!el) return;
+  const lang = seoContent[currentLang];
+  el.innerHTML = lang.section1 + lang.section2 + lang.section3;
+}
+// Render on load
+renderSeoContent();
+</script>
+</body>
+</html>
